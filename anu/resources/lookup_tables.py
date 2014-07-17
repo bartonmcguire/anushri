@@ -187,4 +187,4 @@ lookup_tables.append(
       'ooo- ooo- ooo- ooo-',
       'o--o --o- -o-- o-o-',
       'oo-o -oo- oo-o -oo-',
-      'oooo -oo- oooo -oo-'])))
+      'oooo oooo oooo oooo'])))

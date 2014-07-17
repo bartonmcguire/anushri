@@ -104,11 +104,11 @@ void VoiceTuner::Refresh() {
         // 128.0 * 12.0 / math.log(2) = 2215.98
         // midi2hz(60) = 261.625
         uint16_t scale_low = static_cast<uint16_t>(
-            29574.28f / logf(pitch_c3_ / pitch_c1_));
+            29574.28f / log(pitch_c3_ / pitch_c1_));
         uint16_t scale_high = static_cast<uint16_t>(
-            29574.28f / logf(pitch_c5_ / pitch_c3_));
+            29574.28f / log(pitch_c5_ / pitch_c3_));
         uint16_t offset = 60 * 128 + static_cast<uint16_t>(
-            2215.98f * logf(pitch_c3_ / 261.625));
+            2215.98f * log(pitch_c3_ / 261.625));
         system_settings.set_calibration_data(offset, scale_low, scale_high);
         // Fall through!
       }
