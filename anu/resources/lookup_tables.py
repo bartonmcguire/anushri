@@ -182,9 +182,9 @@ def ConvertPatterns(patterns):
 
 lookup_tables.append(
   ('arpeggiator_patterns', ConvertPatterns([
+      'o--- o--- o--- o---',
+      'o--- o-o- o--- o-o-',
       'o-o- o-o- o-o- o-o-',
-      'o-o- oooo o-o- oooo',
-      'ooo- ooo- ooo- ooo-',
-      'o--o --o- -o-- o-o-',
-      'oo-o -oo- oo-o -oo-',
+      'oooo --oo oo-- ----',
+      'oooo --oo oo-o o-o-',
       'oooo oooo oooo oooo'])))
