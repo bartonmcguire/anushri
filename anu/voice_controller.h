@@ -83,7 +83,7 @@ struct SequencerSettings {
   uint8_t acidity;
   uint8_t padding[2];
   
-  inline uint8_t arp_range() const { return ((arp_mode - 1) & 0x01) + 1; }
+  inline uint8_t arp_range() const { return (((arp_mode - 1) & 0x01)*2) + 1; }
   inline uint8_t arp_direction() const { return (arp_mode - 1) >> 1; }
   inline bool has_drums() const {
     return (drums_density[0] > 1) || \
