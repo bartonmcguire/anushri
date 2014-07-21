@@ -63,7 +63,9 @@ class Envelope {
   }
   
   inline void Trigger(EnvelopeSegment segment) {
-    if (segment == ENV_SEGMENT_DEAD || segment == ENV_SEGMENT_ATTACK) {
+    // if (segment == ENV_SEGMENT_DEAD || segment == ENV_SEGMENT_ATTACK) {
+    // Maybe this change results in attack starting from whatever the previous env position was?
+    if (segment == ENV_SEGMENT_DEAD) {
       value_ = 0;
     }
     a_ = value_;
