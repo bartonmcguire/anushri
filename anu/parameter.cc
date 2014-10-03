@@ -25,9 +25,9 @@
 #include "anu/voice_controller.h"
 
 namespace anu {
-  
+
 using namespace avrlib;
-  
+
 uint8_t Parameter::Scale(uint8_t value_8bits) const {
   uint8_t scaled_value;
   if (unit == UNIT_RAW || unit == UNIT_CROSSFADE) {
@@ -65,58 +65,122 @@ uint8_t Parameter::Unscale(uint8_t value) const {
 typedef Parameter PROGMEM prog_Parameter;
 
 static const prog_uint8_t cc_map[116] PROGMEM = {
-  // 0 to 7
-  0xff, 0xff, 0xff, 0xff, 0xff, PARAMETER_GLIDE, 0xff, 0xff, 
-  // 8 to 15
-  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
-  // 16 to 23
-  PARAMETER_VCO_ENV_AMOUNT, PARAMETER_VCO_LFO_AMOUNT,
-  PARAMETER_PW_ENV_AMOUNT, PARAMETER_PW_LFO_AMOUNT,
-  PARAMETER_CUTOFF_ENV_AMOUNT, PARAMETER_CUTOFF_LFO_AMOUNT,
-  PARAMETER_CUTOFF_BIAS, PARAMETER_CUTOFF_TRACKING, 
-  // 24 to 31
-  PARAMETER_ENV_ATTACK, PARAMETER_ENV_DECAY,
-  PARAMETER_ENV_SUSTAIN, PARAMETER_ENV_RELEASE,
-  PARAMETER_ENV_VCA_MORPH, PARAMETER_VCF_VELOCITY_AMOUNT,
-  PARAMETER_VCA_VELOCITY_AMOUNT, PARAMETER_ENV_LEGATO_MODE,
-  // 32 to 39
-  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
-  // 40 to 47
-  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
-  // 48 to 55
-  PARAMETER_VCO_DCO_RANGE,PARAMETER_VCO_DCO_FINE,
-  PARAMETER_VCO_DETUNE, PARAMETER_VCO_FINE,
-  PARAMETER_VIBRATO_RATE, PARAMETER_VIBRATO_DESTINATION,
-  PARAMETER_LFO_SHAPE, PARAMETER_LFO_RATE, 
-  // 56 to 63
-  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
-  // 64 to 71
-  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
-  // 72 to 79
-  PARAMETER_ENV_RELEASE, PARAMETER_ENV_ATTACK,
-  PARAMETER_CUTOFF_BIAS, PARAMETER_ENV_DECAY,
-  PARAMETER_LFO_RATE, PARAMETER_VCO_LFO_AMOUNT,
-  0xff, 0xff, 
-  // 80 to 87
-  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
-  // 88 to 95
-  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
-  // 96 to 103
-  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, PARAMETER_DRUMS_X, PARAMETER_DRUMS_Y, 
-  // 104 to 111
-  PARAMETER_DRUMS_BD_DENSITY,
-  PARAMETER_DRUMS_SD_DENSITY,
-  PARAMETER_DRUMS_HH_DENSITY,
-  PARAMETER_DRUMS_BD_TONE,
-  PARAMETER_DRUMS_SD_TONE,
-  PARAMETER_DRUMS_HH_TONE,
-  PARAMETER_DRUMS_BALANCE,
-  PARAMETER_DRUMS_BANDWIDTH,
-  // 112 to 115
-  PARAMETER_SWING,
-  PARAMETER_ARP_MODE,
-  PARAMETER_ARP_PATTERN,
-  PARAMETER_ARP_ACIDITY
+  0xff, // cc 0
+  0xff, // cc 1
+  0xff, // cc 2
+  0xff, // cc 3
+  0xff, // cc 4
+  0xff, // cc 5
+  0xff, // cc 6
+  0xff, // cc 7
+  0xff, // cc 8
+  0xff, // cc 9
+  0xff, // cc 10
+  0xff, // cc 11
+  0xff, // cc 12
+  0xff, // cc 13
+  0xff, // cc 14
+  0xff, // cc 15
+  0xff, // cc 16
+  0xff, // cc 17
+  0xff, // cc 18
+  0xff, // cc 19
+  0xff, // cc 20
+  0xff, // cc 21
+  0xff, // cc 22
+  0xff, // cc 23
+  0xff, // cc 24
+  0xff, // cc 25
+  0xff, // cc 26
+  0xff, // cc 27
+  0xff, // cc 28
+  0xff, // cc 29
+  0xff, // cc 30
+  0xff, // cc 31
+  0xff, // cc 32
+  0xff, // cc 33
+  0xff, // cc 34
+  0xff, // cc 35
+  0xff, // cc 36
+  0xff, // cc 37
+  0xff, // cc 38
+  0xff, // cc 39
+  0xff, // cc 40
+  0xff, // cc 41
+  0xff, // cc 42
+  0xff, // cc 43
+  0xff, // cc 44
+  0xff, // cc 45
+  0xff, // cc 46
+  0xff, // cc 47
+  0xff, // cc 48
+  0xff, // cc 49
+  0xff, // cc 50
+  0xff, // cc 51
+  0xff, // cc 52
+  0xff, // cc 53
+  0xff, // cc 54
+  0xff, // cc 55
+  0xff, // cc 56
+  0xff, // cc 57
+  0xff, // cc 58
+  0xff, // cc 59
+  0xff, // cc 60
+  0xff, // cc 61
+  0xff, // cc 62
+  0xff, // cc 63
+  0xff, // cc 64
+  0xff, // cc 65
+  0xff, // cc 66
+  0xff, // cc 67
+  0xff, // cc 68
+  0xff, // cc 69
+  0xff, // cc 70
+  0xff, // cc 71
+  0xff, // cc 72
+  0xff, // cc 73
+  0xff, // cc 74
+  0xff, // cc 75
+  0xff, // cc 76
+  0xff, // cc 77
+  0xff, // cc 78
+  0xff, // cc 79
+  0xff, // cc 80
+  0xff, // cc 81
+  0xff, // cc 82
+  0xff, // cc 83
+  0xff, // cc 84
+  0xff, // cc 85
+  0xff, // cc 86
+  0xff, // cc 87
+  0xff, // cc 88
+  0xff, // cc 89
+  0xff, // cc 90
+  0xff, // cc 91
+  0xff, // cc 92
+  0xff, // cc 93
+  0xff, // cc 94
+  0xff, // cc 95
+  0xff, // cc 96
+  0xff, // cc 97
+  0xff, // cc 98
+  0xff, // cc 99
+  0xff, // cc 100
+  0xff, // cc 101
+  0xff, // cc 102
+  0xff, // cc 103
+  0xff, // cc 104
+  0xff, // cc 105
+  0xff, // cc 106
+  0xff, // cc 107
+  0xff, // cc 108
+  0xff, // cc 109
+  0xff, // cc 110
+  0xff, // cc 111
+  0xff, // cc 112
+  0xff, // cc 113
+  0xff, // cc 114
+  0xff // cc 115
 };
 
 static const prog_Parameter parameters[PARAMETER_LAST] PROGMEM = {
@@ -143,13 +207,13 @@ static const prog_Parameter parameters[PARAMETER_LAST] PROGMEM = {
 
   // PARAMETER_CUTOFF_TRACKING
   { PARAMETER_DOMAIN_PATCH, PRM_PATCH_CUTOFF_TRACKING, UNIT_RAW, 0, 0 },
-  
+
   // PARAMETER_CUTOFF_ENV_AMOUNT
   { PARAMETER_DOMAIN_PATCH, PRM_PATCH_CUTOFF_ENV_AMOUNT, UNIT_RAW, 0, 0 },
-  
+
   // PARAMETER_CUTOFF_LFO_AMOUNT
   { PARAMETER_DOMAIN_PATCH, PRM_PATCH_CUTOFF_LFO_AMOUNT, UNIT_RAW, 0, 0 },
-  
+
   // PARAMETER_GLIDE
   { PARAMETER_DOMAIN_PATCH, PRM_PATCH_KBD_GLIDE, UNIT_RAW, 0, 0 },
 
@@ -158,7 +222,7 @@ static const prog_Parameter parameters[PARAMETER_LAST] PROGMEM = {
 
   // PARAMETER_VCO_FINE
   { PARAMETER_DOMAIN_PATCH, PRM_PATCH_VCO_FINE, UNIT_INT8, -32, 32 },
-  
+
   // PARAMETER_LFO_SHAPE
   { PARAMETER_DOMAIN_PATCH, PRM_PATCH_LFO_SHAPE, UNIT_UINT8,
     LFO_SHAPE_TRIANGLE, LFO_SHAPE_NOISE },
@@ -244,13 +308,13 @@ static const prog_Parameter parameters[PARAMETER_LAST] PROGMEM = {
 
   // PARAMETER_DRUMS_HH_TONE
   { PARAMETER_DOMAIN_SEQUENCER, PRM_SEQ_DRUMS_HH_TONE, UNIT_RAW, 0, 0 },
-  
+
   // PARAMETER_DRUMS_BALANCE
   { PARAMETER_DOMAIN_SEQUENCER, PRM_SEQ_DRUMS_BALANCE, UNIT_RAW, 0, 0 },
 
   // PARAMETER_DRUMS_BANDWIDTH
   { PARAMETER_DOMAIN_SEQUENCER, PRM_SEQ_DRUMS_BANDWIDTH, UNIT_RAW, 0, 0 },
-  
+
   // PARAMETER_UNASSIGNED,
   { PARAMETER_DOMAIN_SEQUENCER, 0, UNIT_RAW, 0, 0 },
 };
