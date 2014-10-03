@@ -210,7 +210,7 @@ const prog_uint16_t lut_res_groove_monkey[] PROGMEM = {
       54,    -70,    127,    -84,    127,   -112,     84,    -84,
 };
 const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {
-   21845,  62965,  30583,  21065,  27499,  28527,
+    4369,  20817,  21845,    975,  23503,  65535,
 };
 
 
