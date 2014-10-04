@@ -212,8 +212,8 @@ void Voice::WriteDACStateSample() {
   pitch += S8U8MulShift8(vibrato_lfo >> 8, mod_wheel_pitch);
   dco_pitch_ = pitch;
 
-  pitch += ((S8U8Mul(patch_.vco_detune, 128))*2.0);
-  pitch += patch_.vco_fine;
+  pitch += S8U8Mul(patch_.vco_detune, 128);
+  pitch += (patch_.vco_fine * 4.0);
   pitch += U16U8MulShift8(mod_envelope, patch_.vco_env_amount) >> 4;
   pitch += S16U8MulShift8(lfo, patch_.vco_lfo_amount) >> 4;
 
