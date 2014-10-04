@@ -26,24 +26,24 @@
 #define CLIP_12(x) if (x < 0) x = 0; if (x > 4095) x = 4095;
 
 namespace anu {
-  
+
 using namespace avrlib;
 
 typedef Patch PROGMEM prog_Patch;
 
 static const prog_Patch init_patch PROGMEM = {
   // VCO
-  0, 0, 0, 0, 0, 0, 
+  0, 0, 0, 0, 0, 0,
   // PW
   0, 128,
   // CUTOFF
   128, 128, 0, 0,
   // ENV
   0, 64, 128, 128, 128, 0, 0, 0,
-  
+
   // LFO
   0, 96, 160, 0,
-  
+
   // Glide and padding
   0, 0, 0, 0
 };
@@ -53,7 +53,7 @@ const int16_t kVcfCvScale = 32000 / 3;
 
 template<>
 struct StorageLayout<Patch> {
-  static uint8_t* eeprom_address() { 
+  static uint8_t* eeprom_address() {
     return (uint8_t*)(0);
   }
   static const prog_char* init_data() {
@@ -63,12 +63,12 @@ struct StorageLayout<Patch> {
 
 void Voice::Init() {
   STATIC_ASSERT(sizeof(Patch) == PRM_PATCH_LAST);
-  
+
   storage.Load(&patch_);
   vcf_envelope_.Init();
   vca_envelope_.Init();
   mod_envelope_.Init();
-  
+
   pitch_ = 0;
   locked_ = false;
   dirty_ = false;
@@ -84,15 +84,15 @@ void Voice::ControlChange(uint8_t controller, uint8_t value) {
     case midi::kVolume:
       volume_ = value << 1;
       break;
-      
+
     case midi::kModulationWheelMsb:
       mod_wheel_ = value;
       break;
-      
+
     case midi::kBreathController:
       mod_wheel_2_ = value;
       break;
-    
+
   }
 }
 
@@ -169,7 +169,7 @@ void Voice::Refresh() {
 
 void Voice::WriteDACStateSample() {
   uint8_t w = dac_state_write_ptr_;
-      
+
   lfo_.set_shape(static_cast<LfoShape>(patch_.lfo_shape));
   if (patch_.lfo_rate >= 2) {
     lfo_.set_phase_increment(
@@ -189,7 +189,7 @@ void Voice::WriteDACStateSample() {
     mod_wheel_growl = mod_wheel_;
     mod_wheel_pitch = U8U8MulShift8(vibrato_destination << 1, mod_wheel_);
   }
-  
+
 
   // Compute modulation sources.
   uint16_t lfo_unsigned = lfo_.Render();
@@ -211,9 +211,9 @@ void Voice::WriteDACStateSample() {
   pitch += patch_.vco_dco_fine;
   pitch += S8U8MulShift8(vibrato_lfo >> 8, mod_wheel_pitch);
   dco_pitch_ = pitch;
-  
+
   pitch += S8U8Mul(patch_.vco_detune, 128);
-  pitch += patch_.vco_fine;
+  pitch += (patch_.vco_fine * 4.0);
   pitch += U16U8MulShift8(mod_envelope, patch_.vco_env_amount) >> 4;
   pitch += S16U8MulShift8(lfo, patch_.vco_lfo_amount) >> 4;
 
@@ -227,7 +227,7 @@ void Voice::WriteDACStateSample() {
   pitch += 2048;
   CLIP_12(pitch);
   dac_state_buffer_[w].vco_cv = pitch;
-  
+
   // PW CV.
   int16_t pw = 0;
   pw += U16U8MulShift8(mod_envelope, patch_.pw_env_amount) >> 2;
@@ -235,7 +235,7 @@ void Voice::WriteDACStateSample() {
   pw >>= 2;
   CLIP_12(pw);
   dac_state_buffer_[w].pw_cv = pw;
-  
+
   // VCF CV.
   uint16_t vcf_envelope = vcf_envelope_.Render();
   int16_t cutoff = 60 * 128;
@@ -263,7 +263,7 @@ void Voice::WriteDACStateSample() {
   cutoff += 2048;
   CLIP_12(cutoff);
   dac_state_buffer_[w].vcf_cv = cutoff;
-  
+
   // VCA CV.
   uint16_t vca_envelope = U16U8MulShift8(
       vca_envelope_.Render(),
@@ -305,7 +305,7 @@ void Voice::NoteOn(
   }
   mod_velocity_ = velocity;
   mod_accent_ = accent;
-  
+
   // When legato mode is enabled, and when the notes are not played legato,
   // There is no glide applied.
   if (!pitch_source_ || (!legato && patch_.env_legato_mode)) {
