@@ -159,7 +159,7 @@ static const prog_uint8_t cc_map[116] PROGMEM = {
   PARAMETER_DRUMS_SD_DENSITY, // cc 91
   PARAMETER_DRUMS_HH_DENSITY, // cc 92
   PARAMETER_DRUMS_BALANCE, // cc 93
-  0xff, // cc 94
+  PARAMETER_DRUMS_X, // cc 94
   0xff, // cc 95
   0xff, // cc 96
   0xff, // cc 97
@@ -180,7 +180,7 @@ static const prog_uint8_t cc_map[116] PROGMEM = {
   0xff, // cc 112
   0xff, // cc 113
   0xff, // cc 114
-  0xff // cc 115
+  PARAMETER_DRUMS_Y // cc 115
 };
 
 static const prog_Parameter parameters[PARAMETER_LAST] PROGMEM = {
