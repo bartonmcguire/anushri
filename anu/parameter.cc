@@ -85,12 +85,12 @@ static const prog_uint8_t cc_map[116] PROGMEM = {
   0xff, // cc 17
   0xff, // cc 18
   0xff, // cc 19
-  0xff, // cc 20
-  0xff, // cc 21
-  0xff, // cc 22
-  0xff, // cc 23
-  0xff, // cc 24
-  0xff, // cc 25
+  PARAMETER_DRUMS_BD_TONE, // cc 20
+  PARAMETER_DRUMS_SD_TONE, // cc 21
+  PARAMETER_DRUMS_HH_TONE, // cc 22
+  PARAMETER_DRUMS_BANDWIDTH, // cc 23
+  PARAMETER_DRUMS_BANDWIDTH, // cc 24
+  PARAMETER_DRUMS_BANDWIDTH, // cc 25
   0xff, // cc 26
   0xff, // cc 27
   0xff, // cc 28
