@@ -206,7 +206,7 @@ void Voice::WriteDACStateSample() {
   }
   int16_t pitch = Mix(pitch_source_, pitch_target_, pitch_counter_);
   pitch_ = pitch;
-  pitch += (mod_pitch_bend_ - 8192) >> 5;
+  pitch += ((mod_pitch_bend_ - 8192)*6) >> 5;
   pitch += S8U8Mul(patch_.vco_dco_range, 6) << 8;
   pitch += patch_.vco_dco_fine;
   pitch += S8U8MulShift8(vibrato_lfo >> 8, mod_wheel_pitch);
