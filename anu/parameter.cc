@@ -70,7 +70,7 @@ static const prog_uint8_t cc_map[120] PROGMEM = {
   0xff, // cc 2
   0xff, // cc 3
   0xff, // cc 4
-  PARAMETER_ARP_ACIDITY, // cc 5
+  PARAMETER_VIBRATO_RATE, // cc 5
   0xff, // cc 6
   0xff, // cc 7
   0xff, // cc 8
@@ -81,7 +81,7 @@ static const prog_uint8_t cc_map[120] PROGMEM = {
   0xff, // cc 13
   0xff, // cc 14
   0xff, // cc 15
-  0xff, // cc 16
+  PARAMETER_ARP_MODE, // cc 16
   0xff, // cc 17
   0xff, // cc 18
   0xff, // cc 19
@@ -147,7 +147,7 @@ static const prog_uint8_t cc_map[120] PROGMEM = {
   0xff, // cc 79
   0xff, // cc 80
   0xff, // cc 81
-  0xff, // cc 82
+  PARAMETER_ARP_ACIDITY, // cc 82
   0xff, // cc 83
   0xff, // cc 84
   0xff, // cc 85
@@ -179,12 +179,12 @@ static const prog_uint8_t cc_map[120] PROGMEM = {
   0xff, // cc 111
   0xff, // cc 112
   0xff, // cc 113
-  0xff, // cc 114
+  PARAMETER_ARP_PATTERN, // cc 114
   PARAMETER_DRUMS_Y, // cc 115
   0xff, // cc 116
   0xff, // cc 117
   0xff, // cc 118
-  PARAMETER_ARP_MODE // cc 119
+  0xff // cc 119
 };
 
 static const prog_Parameter parameters[PARAMETER_LAST] PROGMEM = {
