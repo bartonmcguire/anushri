@@ -64,13 +64,13 @@ uint8_t Parameter::Unscale(uint8_t value) const {
 
 typedef Parameter PROGMEM prog_Parameter;
 
-static const prog_uint8_t cc_map[116] PROGMEM = {
+static const prog_uint8_t cc_map[120] PROGMEM = {
   0xff, // cc 0
   0xff, // cc 1
   0xff, // cc 2
   0xff, // cc 3
   0xff, // cc 4
-  0xff, // cc 5
+  PARAMETER_ARP_ACIDITY, // cc 5
   0xff, // cc 6
   0xff, // cc 7
   0xff, // cc 8
@@ -180,7 +180,11 @@ static const prog_uint8_t cc_map[116] PROGMEM = {
   0xff, // cc 112
   0xff, // cc 113
   0xff, // cc 114
-  PARAMETER_DRUMS_Y // cc 115
+  PARAMETER_DRUMS_Y, // cc 115
+  0xff, // cc 116
+  0xff, // cc 117
+  0xff, // cc 118
+  PARAMETER_ARP_MODE // cc 119
 };
 
 static const prog_Parameter parameters[PARAMETER_LAST] PROGMEM = {
