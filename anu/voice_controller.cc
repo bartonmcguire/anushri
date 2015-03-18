@@ -121,9 +121,9 @@ struct StorageLayout<Sequence> {
   }
 };
 
-uint8_t clock_divisions[] = { 1, 1, 1 };
-uint8_t clock_internal_rate_compensation[] = { 6, 6, 6 };
-uint8_t clock_events_per_pulse[] = { 1, 2, 4 };
+uint8_t clock_divisions[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+uint8_t clock_internal_rate_compensation[] = { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 };
+uint8_t clock_events_per_pulse[] = { 1, 2, 3, 4, 5, 6, 7, 8, 16, 32, 64, 128 };
 
 /* static */
 void VoiceController::Init() {
@@ -333,8 +333,10 @@ void VoiceController::Clock(bool midi_generated) {
   voice_.set_lfo_pll_target_phase(lfo_sync_counter_);
   if (!clock_counter_) {
     if (clock_out_counter_ >= clock_events_per_pulse[system_settings.clock_ppqn()]) {
-      clock_pulse_ = 8;
       clock_out_counter_ = 0;
+    }
+    if (!clock_out_counter_) {
+      clock_pulse_ = 8;
     }
     clock_out_counter_ ++;
     ClockArpeggiator();

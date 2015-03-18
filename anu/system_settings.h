@@ -85,7 +85,7 @@ class SystemSettings {
 
   static void ChangePpqn() {
     ++data_.clock_ppqn;
-    if (data_.clock_ppqn > 2) {
+    if (data_.clock_ppqn > 11) {
       data_.clock_ppqn = 0;
     }
     storage.Save(data_);
