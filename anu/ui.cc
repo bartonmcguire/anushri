@@ -420,7 +420,7 @@ void Ui::UpdateLeds() {
     }
   // A bunch of special cases in MIDI learn mode.
   } else if (display_mode_ == DISPLAY_MODE_PPQN_SETTING) {
-    led_pattern |= _BV(OUTPUT_LFO_LED) << system_settings.clock_ppqn();
+    led_pattern |= _BV(OUTPUT_LFO_LED) << (system_settings.clock_ppqn() % 3);
   } else if (display_mode_ == DISPLAY_MODE_MIDI_CHANNEL) {
     led_pattern |= (system_settings.midi_channel() & 0x07) << OUTPUT_LFO_LED;
   }
