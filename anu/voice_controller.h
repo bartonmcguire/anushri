@@ -236,6 +236,7 @@ class VoiceController {
   static bool ignore_note_off_messages_;
   static uint8_t clock_pulse_;
   static uint8_t clock_counter_;
+  static uint8_t clock_out_counter_;
   static uint8_t lfo_sync_counter_;
   
   static NoteStack<16> pressed_keys_;

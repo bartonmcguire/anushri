@@ -38,6 +38,7 @@ Voice VoiceController::voice_;
 bool VoiceController::ignore_note_off_messages_;
 uint8_t VoiceController::clock_pulse_;
 uint8_t VoiceController::clock_counter_;
+uint8_t VoiceController::clock_out_counter_;
 
 NoteStack<16> VoiceController::pressed_keys_;
 
@@ -120,8 +121,9 @@ struct StorageLayout<Sequence> {
   }
 };
 
-uint8_t clock_divisions[] = { 1, 2, 6 };
-uint8_t clock_internal_rate_compensation[] = { 6, 3, 1 };
+uint8_t clock_divisions[] = { 1, 1, 1 };
+uint8_t clock_internal_rate_compensation[] = { 6, 6, 6 };
+uint8_t clock_events_per_pulse[] = { 1, 2, 4 };
 
 /* static */
 void VoiceController::Init() {
@@ -328,16 +330,21 @@ void VoiceController::AllNotesOff() {
 
 /* static */
 void VoiceController::Clock(bool midi_generated) {
-  clock_pulse_ = 8;
   voice_.set_lfo_pll_target_phase(lfo_sync_counter_);
   if (!clock_counter_) {
+    if (clock_out_counter_ >= clock_events_per_pulse[system_settings.clock_ppqn()]) {
+      clock_pulse_ = 8;
+      clock_out_counter_ = 0;
+    }
+    clock_out_counter_ ++;
     ClockArpeggiator();
     ClockSequencer();
     ClockDrumMachine();
   }
   midi_dispatcher.OnClock(midi_generated);
   ++clock_counter_;
-  if (clock_counter_ >= clock_divisions[system_settings.clock_ppqn()]) {
+  uint8_t clock_pulses_per_step = midi_generated ? 6 : clock_divisions[system_settings.clock_ppqn()];
+  if (clock_counter_ >= clock_pulses_per_step) {
     clock_counter_ = 0;
   }
   ++lfo_sync_counter_;
@@ -350,6 +357,7 @@ void VoiceController::Clock(bool midi_generated) {
 void VoiceController::StartClock() {
   clock.Reset();
   clock_counter_ = 0;
+  clock_out_counter_ = 0;
   lfo_sync_counter_ = 0;
   clock_running_ = true;
   midi_dispatcher.OnStart();
