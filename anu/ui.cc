@@ -70,7 +70,7 @@ void Ui::Init() {
   mux_bank2_ss.set_mode(DIGITAL_OUTPUT);
   mux_bank2_ss.High();
   mux_address.set_mode(DIGITAL_OUTPUT);
-  
+
   adc.set_alignment(ADC_RIGHT_ALIGNED);
   adc.set_reference(ADC_DEFAULT);
   adc.Init();
@@ -84,7 +84,7 @@ void Ui::Init() {
 const uint8_t pots_layout[] = {
   // Bottom row
    6,  0,  4,  2,  1,
-   3,  7,  5,  9, 11, 
+   3,  7,  5,  9, 11,
   // Upper row
   14, 10, 12,  8,
 };
@@ -125,15 +125,15 @@ void Ui::Poll() {
     }
     if (long_press_counter_ == 1224) {
       if (inputs.low(3)) {
-        queue_.AddEvent(CONTROL_SWITCH, CONTROL_SHIFT_LONG_PRESS, 1);
-        inhibit_switch_ = _BV(1);
+        //queue_.AddEvent(CONTROL_SWITCH, CONTROL_SHIFT_LONG_PRESS, 1);
+        //inhibit_switch_ = _BV(1);
       } else if (inputs.low(5)) {
         queue_.AddEvent(CONTROL_SWITCH, CONTROL_RUN_STOP_LONG_PRESS, 1);
         inhibit_switch_ = _BV(3);
       }
     }
   }
-  
+
   // Read pot value and launch ADC scan.
   uint16_t adc_value = adc.ReadOut();
   int16_t delta = adc_values_[scanned_pot_] - adc_value;
@@ -164,7 +164,7 @@ void Ui::Poll() {
     mux_bank1_ss.Low();
   }
   mux_address.Write(address & 0x07);
-  
+
   adc.StartConversion(kAdcInputMux);
 }
 
@@ -199,12 +199,12 @@ void Ui::HandleSwitchEvent(uint8_t index) {
       active_row_ = 0;
       LockPots(false);
       break;
-    
+
     case CONTROL_KBD_BUTTON:
       active_row_ = 1;
       LockPots(true);
       break;
-      
+
     case CONTROL_SEQ_BUTTON:
       if (voice_controller.sequencer_recording()) {
         voice_controller.InsertRest();
@@ -213,7 +213,7 @@ void Ui::HandleSwitchEvent(uint8_t index) {
         LockPots(false);
       }
       break;
-      
+
     case CONTROL_RUN_STOP_BUTTON:
       if (voice_controller.sequencer_running()) {
         voice_controller.Stop();
@@ -221,7 +221,7 @@ void Ui::HandleSwitchEvent(uint8_t index) {
         voice_controller.Start();
       }
       break;
-      
+
     case CONTROL_REC_BUTTON:
       if (voice_controller.sequencer_recording()) {
         busy_ = true;
@@ -232,7 +232,7 @@ void Ui::HandleSwitchEvent(uint8_t index) {
         voice_controller.StartRecording();
       }
       break;
-      
+
     case CONTROL_HOLD_BUTTON:
       if (voice_controller.sequencer_recording()) {
         voice_controller.InsertTie();
@@ -243,7 +243,7 @@ void Ui::HandleSwitchEvent(uint8_t index) {
         voice_controller.HoldNotes();
       }
       break;
-      
+
     case CONTROL_SHIFT_ADSR_BUTTON:
       midi_dispatcher.LearnChannel();
       break;
@@ -251,26 +251,26 @@ void Ui::HandleSwitchEvent(uint8_t index) {
     case CONTROL_SHIFT_KBD_BUTTON:
       display_mode_ = DISPLAY_MODE_MIDI_FILTER;
       break;
-      
+
     case CONTROL_SHIFT_SEQ_BUTTON:
       system_settings.ChangePpqn();
       voice_controller.TouchClock();
       display_mode_ = DISPLAY_MODE_PPQN_SETTING;
       break;
-    
+
     case CONTROL_SHIFT_RUN_STOP_BUTTON:
       voice_tuner.StartTuning();
       break;
-      
+
     case CONTROL_SHIFT_REC_BUTTON:
       system_settings.set_calibration_data(60 * 128, 64000 / 3, 64000 / 3);
       break;
-      
+
     case CONTROL_SHIFT_LONG_PRESS:
       strummer.Start();
       strummer_enabled_ = true;
       break;
-      
+
     case CONTROL_RUN_STOP_LONG_PRESS:
       sysex_handler.BulkDump();
       break;
@@ -289,7 +289,7 @@ prog_uint8_t pot_to_parameter_map[16 * kNumRows] PROGMEM = {
   PARAMETER_ENV_SUSTAIN,
   PARAMETER_ENV_RELEASE,
   PARAMETER_ENV_VCA_MORPH,
-  
+
   PARAMETER_VCO_MOD_BALANCE,
   PARAMETER_PW_MOD_BALANCE,
   PARAMETER_CUTOFF_ENV_AMOUNT,
@@ -315,7 +315,7 @@ prog_uint8_t pot_to_parameter_map[16 * kNumRows] PROGMEM = {
   PARAMETER_CUTOFF_LFO_AMOUNT,
   PARAMETER_UNASSIGNED,
   PARAMETER_UNASSIGNED,
-  
+
   // active_row_ == 2
   PARAMETER_DRUMS_X,
   PARAMETER_DRUMS_BD_DENSITY,
@@ -403,9 +403,9 @@ void Ui::TrySavingSettings() {
 void Ui::UpdateLeds() {
   uint8_t led_pattern = 0;
   pwm_cycle_ += 32;
-  
+
   // 3 horizontal LEDs.
-  
+
   // Default status: Lfo / Gate / Clock blinkers.
   if (display_mode_ == DISPLAY_MODE_LFO_GATE_CLOCK) {
     if (voice_controller.voice().lfo() > pwm_cycle_) {
@@ -437,9 +437,9 @@ void Ui::UpdateLeds() {
         ? _BV(OUTPUT_CLOCK_LED)
         : _BV(OUTPUT_LFO_LED);
   }
-  
+
   // 3 vertical LEDs.
-  
+
   // Default status: current page.
   if (voice_controller.sequencer_recording() || busy_) {
     led_pattern |= \
@@ -450,12 +450,12 @@ void Ui::UpdateLeds() {
   if (display_mode_ == DISPLAY_MODE_MIDI_FILTER) {
     led_pattern = (system_settings.midi_out_mode()) & 0x3f;
   }
-  
+
   // Dim the LEDs 50% when hold mode is enabled.
   if ((voice_controller.hold_state() || strummer_enabled_) && pwm_cycle_) {
     led_pattern = 0;
   }
-  
+
   led_pattern_ = led_pattern;
 }
 
