@@ -6,19 +6,13 @@ The firmware is released under a GPL3.0 license.
 
 The PCB layouts and schematics, documentation, analyses, simulations and 3D models are released under a Creative Commons cc-by-sa 3.0 license.
 
-TODO:
+BUILDING:
 
-- If VCF pitch tracking is turned on let the range of the cutoff knob start lower, so that the filter can always fully close.
-
-- Allow ADSR2 to be independently controlled.
-    Best case scenario if possible: ADSR knobs default to controlling ADSR1, but when "hold" is held, they control ADSR2
-    "VCA env" knob then becomes a depth of how much ADSR2 modulates the VCA. Turning all the way to the left means
-    ADSR2 does not module the VCA at all, allowing the VCA to be modulated by an external source via the patch bay,
-    without ADSR2 getting added in. As a bonus, 7 o clock to 3 o clock would increase adsr2's modulation of the VCA,
-    but then turning all the way to 5 o clock would lock the VCA open, so that it could be open all the time for droning
-    etc.
-    
-    Also overall output could be higher. If I patch into VCA input I can make a much louder note than the normalled
-    ADSR2=>VCA connection can provide. I think the normalled connection should be able to reach the peak volume.
-    This would be especially useful if the depth of that normalled connection was controllable in the manner described
-    above. If possible you could even drive the VCA harder into some overdrive, if the hardware allows it.
+- Make sure avrlib/tools submodules are present
+- Make sure Crosspack-AVR is installed https://obdev.at/products/crosspack/download.html
+  Use "20131205.dmg" because later versions will not work. See: https://forum.mutable-instruments.net/t/building-anushis-firmware/2881/2
+- `touch anu/resources/resources.py`
+- `make resources`
+- `make midi`
+- `make syx`
+- Use sysexlibrarian or any other program to read the firmware to the unit.
