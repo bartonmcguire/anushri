@@ -125,8 +125,8 @@ void Ui::Poll() {
     }
     if (long_press_counter_ == 1224) {
       if (inputs.low(3)) {
-        //queue_.AddEvent(CONTROL_SWITCH, CONTROL_SHIFT_LONG_PRESS, 1);
-        //inhibit_switch_ = _BV(1);
+        queue_.AddEvent(CONTROL_SWITCH, CONTROL_SHIFT_LONG_PRESS, 1);
+        inhibit_switch_ = _BV(1);
       } else if (inputs.low(5)) {
         queue_.AddEvent(CONTROL_SWITCH, CONTROL_RUN_STOP_LONG_PRESS, 1);
         inhibit_switch_ = _BV(3);
