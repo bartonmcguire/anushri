@@ -73,7 +73,10 @@ void Voice::Init() {
   locked_ = false;
   dirty_ = false;
   retriggered_ = false;
-  volume_ = 240;
+  volume_ = 255;
+
+  vca_always_open = false;
+  vca_always_closed = false;
 
   ResetAllControllers();
   UpdateEnvelopeParameters();
@@ -124,19 +127,44 @@ void Voice::UpdateEnvelopeParameters() {
 
   uint8_t morph = patch_.env_vca_morph;
   uint8_t vca_a, vca_d, vca_s, vca_r;
-  if (morph < 128) {
+  vca_always_closed = false;
+  vca_always_closed = false;
+  vca_a = patch_.env_attack;
+  vca_d = patch_.env_decay;
+  vca_s = patch_.env_sustain;
+  vca_r = patch_.env_release;
+
+  if (morph < 3) {
+    vca_always_closed = true;
+  } else if ( (morph >= 10) && (morph < 128) ) {
     morph <<= 1;
     vca_a = U8Mix(patch_.env_attack, 0, morph);
-    vca_d = U8Mix(patch_.env_decay, patch_.env_decay >> 1, morph);
-    vca_s = U8Mix(patch_.env_sustain, 192, morph);
-    vca_r = U8Mix(patch_.env_release, patch_.env_release >> 1, morph);
+    vca_d = U8Mix(patch_.env_decay, 0, morph);
+    vca_s = U8Mix(patch_.env_sustain, 255, morph);
+    vca_r = U8Mix(patch_.env_release, 8, morph);
+  } else if ( (morph >= 128) && (morph < 253) ) {
+    vca_a = 1;
+    vca_d = 0;
+    vca_s = 255;
+    vca_r = U8Mix(0, 255, ( (morph - 128) << 1 ));
   } else {
-    morph = (morph - 128) << 1;
-    vca_a = 0;
-    vca_d = U8Mix(patch_.env_decay >> 1, 0, morph);
-    vca_s = U8Mix(192, 255, morph);
-    vca_r = U8Mix(patch_.env_release >> 1, 8, morph);
+    vca_always_open = true;
   }
+  //if (morph < 128) {
+    //morph <<= 1;
+    //vca_a = U8Mix(patch_.env_attack, 0, morph);
+    //vca_d = U8Mix(patch_.env_decay, patch_.env_decay >> 1, morph);
+    //vca_s = U8Mix(patch_.env_sustain, 192, morph);
+    //vca_r = U8Mix(patch_.env_release, patch_.env_release >> 1, morph);
+  //} else {
+    //morph = (morph - 128) << 1;
+    //vca_a = 0;
+    //vca_d = U8Mix(patch_.env_decay >> 1, 0, morph);
+    //vca_s = U8Mix(192, 255, morph);
+    //vca_r = U8Mix(patch_.env_release >> 1, 8, morph);
+  //}
+
+
   vca_envelope_.Update(vca_a, vca_d, vca_s, vca_r);
 }
 
@@ -269,6 +297,8 @@ void Voice::WriteDACStateSample() {
       vca_envelope_.Render(),
       U8Mix(255, mod_velocity_ << 1, patch_.kbd_velocity_vca_amount));
   vca_envelope = U16U8MulShift8(vca_envelope, volume_);
+  if(vca_always_open == true){ vca_envelope = 255; }
+  if(vca_always_closed == true){ vca_envelope = 0; }
   dac_state_buffer_[w].vca_cv = U16ShiftRight4(vca_envelope);
   dac_state_write_ptr_ = (w + 1) & (kDACStateBufferSize - 1);
 }

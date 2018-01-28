@@ -32,15 +32,15 @@ enum PatchParameter {
   PRM_PATCH_VCO_FINE,
   PRM_PATCH_VCO_ENV_AMOUNT,
   PRM_PATCH_VCO_LFO_AMOUNT,
-  
+
   PRM_PATCH_PW_ENV_AMOUNT,
   PRM_PATCH_PW_LFO_AMOUNT,
-  
+
   PRM_PATCH_CUTOFF_BIAS,
   PRM_PATCH_CUTOFF_TRACKING,
   PRM_PATCH_CUTOFF_ENV_AMOUNT,
   PRM_PATCH_CUTOFF_LFO_AMOUNT,
-  
+
   PRM_PATCH_ENV_ATTACK,
   PRM_PATCH_ENV_DECAY,
   PRM_PATCH_ENV_SUSTAIN,
@@ -49,17 +49,17 @@ enum PatchParameter {
   PRM_PATCH_ENV_LEGATO_MODE,
   PRM_PATCH_ENV_PADDING_1,
   PRM_PATCH_ENV_PADDING_2,
-  
+
   PRM_PATCH_LFO_SHAPE,
   PRM_PATCH_LFO_RATE,
   PRM_PATCH_VIBRATO_RATE,
   PRM_PATCH_VIBRATO_DESTINATION,
-  
+
   PRM_PATCH_KBD_GLIDE,
   PRM_PATCH_KBD_VCF_VELOCITY_AMOUNT,
   PRM_PATCH_KBD_VCA_VELOCITY_AMOUNT,
   PRM_PATCH_PADDING,
-  
+
   PRM_PATCH_LAST
 };
 
@@ -72,15 +72,15 @@ struct Patch {
   int8_t vco_fine;
   uint8_t vco_env_amount;
   uint8_t vco_lfo_amount;
-  
+
   uint8_t pw_env_amount;
   uint8_t pw_lfo_amount;
-  
+
   uint8_t cutoff_bias;
   uint8_t cutoff_tracking;
   uint8_t cutoff_env_amount;
   uint8_t cutoff_lfo_amount;
-  
+
   uint8_t env_attack;
   uint8_t env_decay;
   uint8_t env_sustain;
@@ -88,12 +88,12 @@ struct Patch {
   uint8_t env_vca_morph;
   uint8_t env_legato_mode;
   uint8_t env_padding[2];
-  
+
   uint8_t lfo_shape;
   uint8_t lfo_rate;
   uint8_t vibrato_rate;
   uint8_t vibrato_destination;
-  
+
   uint8_t kbd_glide;
   uint8_t kbd_velocity_vcf_amount;
   uint8_t kbd_velocity_vca_amount;
@@ -113,7 +113,7 @@ class Voice {
   ~Voice() { }
   void Init();
   void Refresh();
-  
+
   void NoteOn(
       uint8_t note,
       uint8_t velocity,
@@ -128,16 +128,16 @@ class Voice {
   void ResetAllControllers();
   void GateOn();
   void GateOff();
-  
+
   void SetValue(uint8_t offset, uint8_t value);
   uint8_t GetValue(uint8_t offset) const {
     const uint8_t* bytes;
     bytes = static_cast<const uint8_t*>(static_cast<const void*>(&patch_));
     return bytes[offset];
   }
-  
+
   const DACState& dac_state() const { return dac_state_; }
-  
+
   inline int16_t dco_pitch() const { return dco_pitch_; }
   inline bool gate() const { return vca_envelope_.gate(); }
   inline bool retriggered() const { return retriggered_; }
@@ -146,20 +146,20 @@ class Voice {
   inline bool at_rest() const {
     return vca_envelope_.segment() == ENV_SEGMENT_DEAD;
   }
-  
+
   inline void set_note(uint8_t note) {
     pitch_ = pitch_target_ = avrlib::U8U8Mul(note, 128);
   }
-  
+
   inline void set_lfo_pll_target_phase(uint8_t step) {
     if (patch_.lfo_rate < 2) {
       lfo_.set_target_phase(static_cast<uint16_t>(step) * 2730);
     }
   }
-  
+
   void SavePatch();
   void ResetToFactoryDefaults();
-  
+
   void Lock(uint16_t vco_cv, uint16_t pw_cv, uint16_t vcf_cv, uint16_t vca_cv) {
     dac_state_.vco_cv = vco_cv;
     dac_state_.pw_cv = pw_cv;
@@ -167,7 +167,7 @@ class Voice {
     dac_state_.vca_cv = vca_cv;
     locked_ = true;
   }
-  
+
   void ReadDACStateSample() {
     if (!locked_) {
       uint8_t r = dac_state_read_ptr_;
@@ -175,52 +175,55 @@ class Voice {
       dac_state_read_ptr_ = (r + 1) & (kDACStateBufferSize - 1);
     }
   }
-  
+
   inline uint8_t writable() const {
     return (dac_state_read_ptr_ - dac_state_write_ptr_ - 1) & \
         (kDACStateBufferSize - 1);
   }
-  
+
   inline uint8_t readable() const {
     return (dac_state_write_ptr_ - dac_state_read_ptr_) & \
         (kDACStateBufferSize - 1);
   }
-  
+
   void Unlock() {
     locked_ = false;
   }
-  
+
   inline Patch* mutable_patch() {
     return &patch_;
   }
-  
+
   void Touch() {
     UpdateEnvelopeParameters();
   }
-  
+
  private:
   void WriteDACStateSample();
   void UpdateEnvelopeParameters();
-   
+
   Patch patch_;
   Lfo lfo_;
   Lfo vibrato_lfo_;
   Envelope vcf_envelope_;
   Envelope mod_envelope_;
   Envelope vca_envelope_;
-  
+
   bool locked_;
   bool dirty_;
   bool retriggered_;
-  
+
+  bool vca_always_open;
+  bool vca_always_closed;
+
   uint8_t lfo_8_bits_;
-  
+
   uint16_t vco_cv_;
   uint16_t pw_cv_;
   uint16_t vcf_cv_;
   uint16_t vca_cv_;
   int16_t dco_pitch_;
-  
+
   int16_t vco_cv_offset_;
   uint16_t vco_cv_scale_low_;
   uint16_t vco_cv_scale_high_;
@@ -230,7 +233,7 @@ class Voice {
   int16_t pitch_source_;
   int16_t pitch_target_;
   int16_t pitch_;
-  
+
   int16_t mod_pitch_bend_;
   uint8_t mod_wheel_;
   uint8_t mod_wheel_2_;
@@ -238,12 +241,12 @@ class Voice {
   uint8_t mod_velocity_;
   uint8_t mod_accent_;
   uint8_t volume_;
-  
+
   DACState dac_state_;
   DACState dac_state_buffer_[kDACStateBufferSize];
   uint8_t dac_state_read_ptr_;
   uint8_t dac_state_write_ptr_;
-  
+
   DISALLOW_COPY_AND_ASSIGN(Voice);
 };
 
