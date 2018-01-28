@@ -271,7 +271,8 @@ void Voice::WriteDACStateSample() {
   int8_t cutoff_tracking;
   //changing cutoff tracking control to hijack vca velocity instead
   //cutoff_tracking = patch_.cutoff_tracking;
-  cutoff_tracking = 128 - (patch_.kbd_velocity_vca_amount >> 1);
+  cutoff_tracking = 128 - (patch_.kbd_velocity_vca_amount);
+  ///
   cutoff += S16U8MulShift8(dco_pitch_ - 60 * 128, cutoff_tracking) << 1;
   cutoff += S8U8Mul(patch_.cutoff_bias + 128, 64);
   uint16_t growl_amount = mod_wheel_growl;
