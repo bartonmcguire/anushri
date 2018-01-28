@@ -209,6 +209,7 @@ void Voice::WriteDACStateSample() {
   uint8_t mod_wheel_pitch = 0;
   uint8_t mod_wheel_growl = 0;
   uint8_t vibrato_destination = patch_.vibrato_destination;
+
   if (vibrato_destination < 128) {
     mod_wheel_pitch = mod_wheel_;
     mod_wheel_growl = U8U8MulShift8(vibrato_destination << 1, mod_wheel_);
@@ -267,7 +268,11 @@ void Voice::WriteDACStateSample() {
   // VCF CV.
   uint16_t vcf_envelope = vcf_envelope_.Render();
   int16_t cutoff = 60 * 128;
-  cutoff += S16U8MulShift8(dco_pitch_ - 60 * 128, patch_.cutoff_tracking) << 1;
+  int8_t cutoff_tracking;
+  //changing cutoff tracking control to hijack vca velocity instead
+  //cutoff_tracking = patch_.cutoff_tracking;
+  cutoff_tracking = 128 - (patch_.kbd_velocity_vca_amount >> 1);
+  cutoff += S16U8MulShift8(dco_pitch_ - 60 * 128, cutoff_tracking) << 1;
   cutoff += S8U8Mul(patch_.cutoff_bias + 128, 64);
   uint16_t growl_amount = mod_wheel_growl;
   growl_amount += mod_wheel_2_;
@@ -293,9 +298,13 @@ void Voice::WriteDACStateSample() {
   dac_state_buffer_[w].vcf_cv = cutoff;
 
   // VCA CV.
-  uint16_t vca_envelope = U16U8MulShift8(
-      vca_envelope_.Render(),
-      U8Mix(255, mod_velocity_ << 1, patch_.kbd_velocity_vca_amount));
+  // No velocity VCA control, to enable that half of knob for filter tracking
+  //uint16_t vca_envelope = U16U8MulShift8(
+      //vca_envelope_.Render(),
+      //U8Mix(255, mod_velocity_ << 1, patch_.kbd_velocity_vca_amount));
+  uint16_t vca_envelope = U16U8MulShift8(vca_envelope_.Render(), 255);
+  ////////////////
+  //
   vca_envelope = U16U8MulShift8(vca_envelope, volume_);
   if(vca_always_open == true){ vca_envelope = 255; }
   if(vca_always_closed == true){ vca_envelope = 0; }
