@@ -1,0 +1,6 @@
+#!/bin/bash
+
+touch anu/resources/resources.py
+make resources.py
+make midi
+make syx
