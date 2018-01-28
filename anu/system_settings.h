@@ -36,7 +36,7 @@ struct SystemSettingsData {
   uint8_t clock_ppqn;
   uint8_t reference_note;
   uint8_t padding[2];
-  
+
   uint16_t vco_cv_offset;
   uint16_t vco_cv_scale_low;
   uint16_t vco_cv_scale_high;
@@ -44,11 +44,11 @@ struct SystemSettingsData {
 };
 
 typedef SystemSettingsData PROGMEM prog_SystemSettingsData;
-extern prog_SystemSettingsData init_settings PROGMEM;
+const extern prog_SystemSettingsData init_settings PROGMEM;
 
 template<>
 struct StorageLayout<SystemSettingsData> {
-  static uint8_t* eeprom_address() { 
+  static uint8_t* eeprom_address() {
     return (uint8_t*)(1000);
   }
   static const prog_char* init_data() {
@@ -59,23 +59,23 @@ struct StorageLayout<SystemSettingsData> {
 class SystemSettings {
  public:
   SystemSettings() { }
-  
+
   static void Init() {
     storage.Load(&data_);
   }
-  
+
   static void ResetToFactoryDefaults() {
     storage.ResetToFactoryDefaults(&data_);
   }
-  
+
   static inline uint8_t receive_channel(uint8_t channel) {
     return channel == data_.midi_channel;
   }
-  
+
   static inline uint8_t midi_channel() {
     return data_.midi_channel;
   }
-  
+
   static inline uint8_t midi_out_mode() { return data_.midi_out_mode; }
   static inline uint8_t clock_ppqn() { return data_.clock_ppqn; }
   static inline uint8_t reference_note() { return data_.reference_note; }
@@ -90,34 +90,34 @@ class SystemSettings {
     }
     storage.Save(data_);
   }
-  
+
   static void set_calibration_data(uint16_t a, uint16_t b, uint16_t c) {
     data_.vco_cv_offset = a;
     data_.vco_cv_scale_low = b;
     data_.vco_cv_scale_high = c;
     storage.Save(data_);
   }
-  
+
   static void set_midi_channel(uint8_t channel, uint8_t note) {
     data_.reference_note = note;
     data_.midi_channel = channel;
     storage.Save(data_);
   }
-  
+
   static void set_midi_out_mode(uint8_t mode) {
     data_.midi_out_mode = mode;
     storage.Save(data_);
   }
-  
+
   static void set_midi_channel(uint8_t channel) {
     data_.midi_channel = channel;
     storage.Save(data_);
   }
-  
+
   static SystemSettingsData* mutable_data() {
     return &data_;
   }
-  
+
   static void Save() {
     storage.Save(data_);
   }

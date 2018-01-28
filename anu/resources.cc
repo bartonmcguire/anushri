@@ -28,7 +28,7 @@ namespace anu {
 static const prog_char str_res_dummy[] PROGMEM = "dummy";
 
 
-const prog_char* string_table[] = {
+const prog_char* const string_table[] = {
   str_res_dummy,
 };
 
@@ -214,7 +214,7 @@ const prog_uint16_t lut_res_arpeggiator_patterns[] PROGMEM = {
 };
 
 
-const prog_uint16_t* lookup_table_table[] = {
+const prog_uint16_t* const lookup_table_table[] = {
   lut_res_glide_increments,
   lut_res_drm_env_increments,
   lut_res_drm_phase_increments,
@@ -299,7 +299,7 @@ const prog_uint32_t lut_res_env_increments[] PROGMEM = {
 };
 
 
-const prog_uint32_t* lookup_table_32_table[] = {
+const prog_uint32_t* const lookup_table_32_table[] = {
   lut_res_lfo_increments,
   lut_res_env_increments,
 };
@@ -1031,7 +1031,7 @@ const prog_uint8_t wav_res_drum_map_node_8[] PROGMEM = {
 };
 
 
-const prog_uint8_t* waveform_table[] = {
+const prog_uint8_t* const waveform_table[] = {
   wav_res_deadband,
   wav_res_pitch_deadband,
   wav_res_drm_envelope,

@@ -36,13 +36,13 @@ namespace anu {
 
 typedef uint8_t ResourceId;
 
-extern const prog_char* string_table[];
+extern const prog_char* const string_table[];
 
-extern const prog_uint16_t* lookup_table_table[];
+extern const prog_uint16_t* const lookup_table_table[];
 
-extern const prog_uint32_t* lookup_table_32_table[];
+extern const prog_uint32_t* const lookup_table_32_table[];
 
-extern const prog_uint8_t* waveform_table[];
+extern const prog_uint8_t* const waveform_table[];
 
 extern const prog_uint16_t lut_res_glide_increments[] PROGMEM;
 extern const prog_uint16_t lut_res_drm_env_increments[] PROGMEM;

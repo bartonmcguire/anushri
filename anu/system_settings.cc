@@ -37,27 +37,27 @@ uint16_t vco_cv_scale_high;
 uint8_t more_padding[3];
 
 /* extern */
-prog_SystemSettingsData init_settings PROGMEM = {
+const prog_SystemSettingsData init_settings PROGMEM = {
   // MIDI channel
   0,
-  
+
   // MIDI out filter
   0xff,
-  
+
   // Clock PPQN
   2,
-  
+
   // Reference note
   60,
-  
+
   // Padding
   0, 0,
-  
+
   // VCO calibration data
   60 * 128,
-  64000 / 3, 
   64000 / 3,
-  
+  64000 / 3,
+
   // Padding
   0, 0, 0
 };
