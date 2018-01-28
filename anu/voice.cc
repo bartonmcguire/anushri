@@ -128,7 +128,7 @@ void Voice::UpdateEnvelopeParameters() {
   uint8_t morph = patch_.env_vca_morph;
   uint8_t vca_a, vca_d, vca_s, vca_r;
   vca_always_closed = false;
-  vca_always_closed = false;
+  vca_always_open = false;
   vca_a = patch_.env_attack;
   vca_d = patch_.env_decay;
   vca_s = patch_.env_sustain;
@@ -302,12 +302,16 @@ void Voice::WriteDACStateSample() {
   //uint16_t vca_envelope = U16U8MulShift8(
       //vca_envelope_.Render(),
       //U8Mix(255, mod_velocity_ << 1, patch_.kbd_velocity_vca_amount));
-  uint16_t vca_envelope = U16U8MulShift8(vca_envelope_.Render(), 255);
+
+  uint16_t raw_vca_envelope = vca_envelope_.Render();
+  // Allow morph knob to lock VCA open or closed
+  if(vca_always_open == true){ raw_vca_envelope = 65535; }
+  if(vca_always_closed == true){ raw_vca_envelope = 0; }
+
+  uint16_t vca_envelope = U16U8MulShift8(raw_vca_envelope, 255);
   ////////////////
   //
   vca_envelope = U16U8MulShift8(vca_envelope, volume_);
-  if(vca_always_open == true){ vca_envelope = 255; }
-  if(vca_always_closed == true){ vca_envelope = 0; }
   dac_state_buffer_[w].vca_cv = U16ShiftRight4(vca_envelope);
   dac_state_write_ptr_ = (w + 1) & (kDACStateBufferSize - 1);
 }
